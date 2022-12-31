@@ -1,0 +1,128 @@
+{% include './MenuList.html' with menu="li" %}
+
+{% block content %}
+     
+ <div class="col-sm-offset-7">
+
+{% if user.get_username == "admin" %} 
+ <a type="button" class="btn btn-primary" href="{% url 'add_inventory' %}">Add Inventory item</a>
+ <a type="button" class="btn btn-primary" href="{% url 'edit_inventory' %}">Edit Inventory item</a>
+ <a type="button" class="btn btn-primary" href="{% url 'delete_inventory' %}">Delete Inventory item</a>
+{% endif %}
+
+</div>
+
+
+<div class="col-xs-5">
+  <br>
+  <br>
+  
+         
+<div class="container horizontal-scrollable"> 
+  <h3>List Inventory by Filters</h3>
+  <br>
+        <div class="row text-center"> 
+  
+  
+ <form class="form-horizontal" action="{% url 'list_inventory' %}" method="GET">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <label class="control-label col-sm-2" >Inventory Item Group:</label>
+    <div class="col-xs-6">
+      <select class="form-control" name="item_group">
+        {% for h in ig %}
+        <option>{{ h.name }}</option>
+        {% endfor %}
+        <option selected > </option>
+
+    </select>
+    </div>
+    </div>
+
+<div class="form-group">
+<label class="control-label col-sm-2" >Inventory Item name contains :</label>
+<div class="col-xs-6">
+  <input type="text" class="form-control input-default " id="item_name" name="item_name" placeholder="Enter Inventory Item name" >
+</div>        
+</div>
+
+<div class="form-group">
+  <label class="control-label col-sm-2" >Inventory Item Code contains:</label>
+  <div class="col-xs-6">
+    <input type="text" class="form-control input-default" id="item_code" name="item_code" placeholder="Enter Inventory Item code" >
+  </div>        
+  </div>
+
+
+<div class="form-group">        
+<div class="col-sm-offset-2 col-sm-10">
+
+    <button type="submit" class="btn btn-primary" >Search</button>
+
+  </div>
+</div>
+
+</form>
+
+<hr> 
+<br><br><br>
+
+
+
+
+  <table class="table table-bordered table-responsive table-striped">
+  <thead>
+    <tr>
+      <th>Item code</th>
+      <th>Item name</th>              
+      <th>Available Quantity</th>
+      <th>Price per Item</th>
+      <th>Date Added</th>
+      <th>Inventory Group</th>
+
+  
+    </tr>
+  </thead>
+  {% if inventory %}
+  <tbody>
+        {% for item in qs %}
+   <tr class="items">
+   <td>{{ item.item_code}} </td>
+    <td>{{ item.name}} </td>            
+    <td>{{ item.quantity}} </td>
+    <td>{{ item.price}} </td>
+    <td>{{ item.date}} </td>
+    <td>{{ item.group.name}} </td>
+  
+  </tr>
+        {% endfor %}    
+  </tbody>
+  
+  {% endif %}
+  
+  </table>
+  
+  </div> 
+  
+  <br><br><br><br>
+  
+  </div>
+        
+
+    </div>
+
+
+<br><br><br><br>
+
+
+
+    </div>
+   
+  </div>
+
+
+
+{% endblock %}
+
+
