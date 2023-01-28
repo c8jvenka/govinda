@@ -2,10 +2,7 @@
 
 {% block content %}
 
-<div class="col-sm-offset-7">
-   
-  
-  </div>
+
 
 <div class="col-sm-9"> 
 
@@ -72,6 +69,9 @@
             <th>Order Status</th>              
             <th>Order Date</th>
             <th>Order Total</th>
+            <th>Paid by Cash</th>
+            <th>Paid through Online</th>
+            <th>Transaction ID</th>
             <th>Ordered by Customer</th>
       
 
@@ -89,6 +89,9 @@
             {{ item.order_date}}
           </td>
           <td>{{ item.order_total}} </td>
+          <td>{{ item.cash}} </td>
+          <td>{{ item.online}} </td>
+          <td>{{ item.transaction_id}}</td>
           <td>{{ item.customer_mobile.customer_mobile}} </td>
          
         </tr>

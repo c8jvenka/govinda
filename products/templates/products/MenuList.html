@@ -19,13 +19,16 @@
     
    </head>
 
+   {% load static %}
+   <!--<body id="bg", style="background-image: url('{% static "Hari.jpg" %}');">-->
+
 
   <div style="text-align:center;color:#00008B;">
-        <i><h1>Haray Krishna</h1></i>
+        <i><h1>Hare Krishna</h1></i>
       </div>
                  
  
- 
+ {% if not menu == 'po' %}
   <nav class="navbar navbar-defult">
   <div class="container-fluid">
        <ul class="nav navbar-nav">
@@ -43,20 +46,27 @@
    
  <div class="btn-group-vertical col-sm-2">
   {% if user.get_username == "admin" %}
+  <a type="button" class="btn {% if menu == 'bu' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_bu' %}"><span class="glyphicon glyphicon-blackboard"></span>  Business Unit</a>
   <a type="button" class="btn {% if menu == 'lg' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_groups' %}"><span class="glyphicon glyphicon-blackboard"></span>  Groups</a>
   {% endif %}  
 
   <a type="button" class="btn {% if menu == 'li' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_inventory' %}"><span class="glyphicon glyphicon-camera"></span>  Inventory Items </a>
    <a type="button" class="btn {% if menu == 'ls' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'update_cart' %}"> <span class="glyphicon glyphicon-th-list"></span>  Sales</a>
    <a type="button" class="btn {% if menu == 'co' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'cart_checkout' %}"> <span class="glyphicon glyphicon-th-list"></span>  Check Out</a>
+   <a type="button" class="btn {% if menu == 're' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'gen_report' %}"> <span class="glyphicon glyphicon-th-list"></span>  Reports</a>
+   <a type="button" class="btn {% if menu == 'la' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_alerts' %}"> <span class="glyphicon glyphicon-th-list"></span>  Alerts</a>
+   <a type="button" class="btn {% if menu == 'sr' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'gen_summary' %}"> <span class="glyphicon glyphicon-th-list"></span>  Summary Report</a>
+
    <a type="button" class="btn {% if menu == 'lc' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_customers' %}"> <span class="glyphicon glyphicon-th-list"></span>  Customers</a>
    <a type="button" class="btn {% if menu == 'lo' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_orders' %}"> <span class="glyphicon glyphicon-th-list"></span>  List Orders</a>
    <a type="button" class="btn {% if menu == 'loi' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_order_items' %}"> <span class="glyphicon glyphicon-th-list"></span>  List Order Items</a>
+   <a type="button" class="btn {% if menu == 'ii' %} btn-primary {% endif %}" style="text-align:left !important;" href="{% url 'list_order_items' %}"> <span class="glyphicon glyphicon-th-list"></span>  Import Items</a>
+
 
   
    {% if user.get_username == "admin" %}
         
   {% endif %}  
+  {% endif %}
 </div>
-
 </html>

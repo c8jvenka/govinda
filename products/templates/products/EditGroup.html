@@ -66,6 +66,19 @@
     </div>
   </div>
 
+
+<div class="form-group">
+  <label class="control-label col-sm-2" >Business Unit:</label>
+  <div class="col-xs-6">
+    <select class="form-control" name="bu" required="required">
+      {% for h in bus %}
+      <option {% if h.name == ig.bu.name %} selected {% endif %}>{{ h.name }}</option>
+      {% endfor %}
+  </select>
+  </div>
+</div>
+
+
   <div class="form-group">
     <label class="control-label col-sm-2" >Date Added :</label>
     <div class="col-xs-6">

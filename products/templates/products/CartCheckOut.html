@@ -6,7 +6,22 @@
 <a type="button" class="btn btn-primary" href="{% url 'update_cart' %}">Cancel Order</a>
 </div>
 
+<div class="col-sm-9"> 
+
 <h3>Cart Items</h3>
+
+{% if perror %}
+<div class="alert alert-danger">
+                <strong>Error!</strong> {{ perror }}
+            </div>
+{% endif %}
+
+{% if psuccess %}
+<div class="alert alert-success">
+                <strong>Success!</strong> {{ psuccess }}
+            </div>
+{% endif %}
+
 
   <div class="container horizontal-scrollable"> 
     <div class="row text-center"> 
@@ -15,11 +30,12 @@
         <thead>
           <tr>
             <th>Item code</th>
-            <th>Item name</th>              
-            <th>Order Quantity</th>
-            <th>Price per Item</th>
-            <th>Date</th>
+            <th>Item name</th>    
+            <th>Business Unit</th>
             <th>Inventory Group</th>
+            <th>Order Quantity</th>
+            <th>Price </th>
+            <th>Date</th>
             <th>Order Price</th>
       
         
@@ -32,13 +48,14 @@
               
          <tr class="edit_order">
           <td>{{ item.item_code}} </td>
-          <td>{{ item.name}} </td>            
+          <td>{{ item.name}} </td>        
+          <td>{{ item.bu}} </td>       
+          <td>{{ item.item_group}} </td>
           <td>
             {{ item.order_quantity}}
           </td>
           <td>{{ item.item_price}} </td>
           <td>{{ item.date}}</td>
-          <td>{{ item.item_group}} </td>
           <td>{{ item.order_price }} </td>
           
 
@@ -47,10 +64,12 @@
         <tr>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><h3>Net Total :</h3></td>
+
+          <td><h3>Item Price:</h3></td>
+          <td><h3>{{ iprice }}</h3></td>
+          <td><h3>GST :</h3></td>
+          <td><h3>{{ tax }}</h3></td>
+          <td><h3>Gross Total :</h3></td>
           <td><h1>{{ total }}</h1></td>
           
 
@@ -63,12 +82,39 @@
 
 
 
-      <br><br><br>
-      <h3>Customer Details </h3>
+      
   
 
    <form class="form-horizontal" action="{% url 'cart_checkout' %}" method="POST">
     {% csrf_token %}
+
+    <br><br><br>
+      <h3>Payment Details  </h3>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" >Paid by Cash :</label>
+      <div class="col-xs-6">
+        <input type="number" class="form-control input-default " id="cash" name="cash" step="0.01" value=0 placeholder="Paid by Cash  "required="required" >
+      </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-2" >Paid through Online :</label>
+        <div class="col-xs-6">
+          <input type="number" class="form-control input-default " id="online" name="online" step="0.01" value=0 placeholder="Paid through Online "required="required" >
+        </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-2" >Transaction ID :</label>
+          <div class="col-xs-6">
+            <input type="text" class="form-control input-default " id="trid" name="trid"  placeholder="Enter Transaction ID "  >
+          </div>
+          </div>
+
+
+    <br><br><br>
+      <h3>Customer Details </h3>
 
   <br>
   <div class="form-group">
@@ -115,5 +161,9 @@
 
 
       <br><br><br><br>
+</div>
+
+
+    
 
       {% endblock %}

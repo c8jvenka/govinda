@@ -1,4 +1,5 @@
 from django.urls import path
+from .views import generatePDF
 
 from . import views
 
@@ -23,10 +24,25 @@ urlpatterns = [
     path('update_cart', views.update_cart, name='update_cart'),
     path('edit_cart', views.edit_cart, name='edit_cart'),
     path('list_customers', views.list_customers, name='list_customers'),
-    path('edit_customers', views.edit_customers, name='edit_customers'),
-    path('delete_customers', views.delete_customers, name='delete_customers'),
     path('list_orders', views.list_orders, name='list_orders'),
     path('list_order_items', views.list_order_items, name='list_order_items'),
+    path('generatePDF', views.generatePDF, name='generatePDF'),
+    path('generatePDF1', views.generatePDF1, name='generatePDF1'),
+    path('gen_report', views.gen_report, name='gen_report'),
+    path('list_bu', views.list_bu, name='list_bu'),
+    path('add_bu', views.add_bu, name='add_bu'),
+    path('edit_bu', views.edit_bu, name='edit_bu'),
+    path('delete_bu', views.delete_bu, name='delete_bu'),
+    path('ajax/load-groups/', views.load_groups, name='ajax_load_groups'),
+    path('load_groups', views.load_groups, name='load_groups'),
+    path('list_alerts', views.list_alerts, name='list_alerts'),
+    path('gen_summary_repo', views.gen_summary_repo, name='gen_summary_repo'),
+    path('gen_alert_repo', views.gen_alert_repo, name='gen_alert_repo'),
+    path('gen_summary', views.gen_summary, name='gen_summary'),
+    path('edit_customer', views.edit_customer, name='edit_customer'),
+    path('delete_customer', views.delete_customer, name='delete_customer'),
+
+
 
     
 

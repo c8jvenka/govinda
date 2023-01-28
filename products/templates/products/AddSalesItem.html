@@ -9,6 +9,7 @@
 
 </div>
 
+
 <h3>Cart Inventory Item</h3>
 
   <div class="container horizontal-scrollable"> 
@@ -19,14 +20,16 @@
         <thead>
           <tr>
             <th>Item code</th>
-            <th>Item name</th>              
-            <th>Order Quantity</th>
-            <th>Price per Item</th>
-            <th>Date</th>
+            <th>Item name</th>      
+            <th>Unit </th>    
+            <th>BU</th>
             <th>Inventory Group</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th>cGST %</th>
+            <th>sGST %</th>
+            <th>Order Quantity</th>
             <th>Order Price</th>
-      
-        
           </tr>
         </thead>
         <tbody>
@@ -36,13 +39,18 @@
               
          <tr class="edit_order">
           <td><input class="form-control input-default" type="text" name="i_code" value="{{ item.item_code}}" readonly > </td>
-          <td>{{ item.name}} </td>            
+          <td>{{ item.name}} </td>    
+          <td>{{ item.unit}} </td> 
+          <td>{{ item.bu}} </td> 
+          <td>{{ item.item_group}} </td>   
+          <td>{{ item.date}}</td>
+          <td>{{ item.item_price}} </td>
+          <td>{{ item.cgst}} </td>
+          <td>{{ item.sgst}} </td>
           <td>
             {{ item.order_quantity}}
           </td>
-          <td>{{ item.item_price}} </td>
-          <td>{{ item.date}}</td>
-          <td>{{ item.item_group}} </td>
+          
           <td>{{ item.order_price }} </td>
           {% if edit %}
           <td> <select class="form-control combo" id="order" name="order"/>
@@ -55,9 +63,14 @@
           <td></td>
           <td></td>
           <td></td>
+          <td><h3>Item Price:</h3></td>
+
+          <td><h3>{{ iprice }}</h3></td>
           <td></td>
+          <td><h3>GST:</h3></td>
+          <td><h3>{{ tax }}</h3> </td>
           <td></td>
-          <td><h3>Net Total :</h3></td>
+          <td><h3>Gross Total:</h3></td>
           <td><h1>{{ total }}</h1></td>
           {% if edit %}
           <td>     <button type="submit" class="btn btn-primary" >Save Edit</button>
@@ -95,21 +108,34 @@
         <div class="row text-center"> 
   
 
-<form class="form-horizontal" action="{% url 'update_cart' %}" method="GET">
+<form class="form-horizontal" id="inventory"  data-groups-url="{% url 'load_groups' %}" action="{% url 'update_cart' %}" method="GET">
   {% csrf_token %}
 
+
   <div class="form-group">
-    <label class="control-label col-sm-2" >Inventory Item Group:</label>
+    <label class="control-label col-sm-2" >Business Unit * :</label>
     <div class="col-xs-6">
-      <select class="form-control" name="item_group">
-        {% for h in ig %}
+      <select class="form-control" id="bu" name="bu" required="required">
+        <option>-----</option>
+  
+        {% for h in bus %}
         <option>{{ h.name }}</option>
         {% endfor %}
-        <option selected > </option>
-
     </select>
     </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-sm-2" >Item Group * :</label>
+    <div class="col-xs-6">
+      <select class="form-control" name="item_group" id="item_group" required="required">
+        <option>-----</option>
+
+    </select>
+  
     </div>
+  </div>
+
 
 <div class="form-group">
 <label class="control-label col-sm-2" >Inventory Item name contains :</label>
@@ -157,12 +183,19 @@
   <table class="table table-bordered table-responsive table-striped">
   <thead>
     <tr>
+
+
+
       <th>Item code</th>
-      <th>Item name</th>              
-      <th>Available Quantity</th>
-      <th>Price per Item</th>
-      <th>Date Added</th>
+      <th>Item name</th>   
+      <th>Unit</th>         
+      <th>BU</th>
       <th>Inventory Group</th>
+      <th>Available Quantity</th>
+      <th>Price</th>
+      <th>cGST %</th>
+      <th>sGST %</th>
+      <th>Date</th>
       <th>Order Quantity</th>
 
   
@@ -172,15 +205,19 @@
   <tbody>
         {% for item in qs %}
    <tr class="items">
-   <td><input class="form-control input-default" type="text" name="i_code" value="{{ item.item_code}}" readonly {% if item.quantity < 1 %} disabled {% endif %}> </td>
-    <td>{{ item.name}} </td>            
-    <td>{{ item.quantity}} </td>
+   <td><input class="form-control input-default" type="text" name="i_code" value="{{ item.item_code}}" readonly {% if item.available_quantity < 1 %} disabled {% endif %}> </td>
+   <td>{{ item.name}} </td>     
+   <td>{{ item.unit}} </td>     
+   <td>{{ item.bu.name}} </td>
+   <td>{{ item.group.name}} </td>       
+    <td>{{ item.available_quantity}} </td>
     <td>{{ item.price}} </td>
+    <td>{{ item.cgst}} </td>
+    <td>{{ item.sgst}} </td>
     <td>{{ item.date}} </td>
-    <td>{{ item.group.name}} </td>
     
 <td>
-  <select class="form-control combo" id="order" name="order"	 {% if item.quantity < 1 %} disabled {% endif %}/>
+  <select class="form-control combo" id="order" name="order"	 {% if item.available_quantity < 1 %} disabled {% endif %}/>
 </td>
   
   </tr>
@@ -208,7 +245,7 @@
   
   $(".items").each(function(){
         var self = $(this);
-        var j=self.find("td:eq(2)").text().trim();
+        var j=self.find("td:eq(5)").text().trim();
           for(i=0;i<=j;i++){
             self.find("select").append('<option val=' + i + '>' + i + '</option>');
           }
@@ -217,7 +254,7 @@
   
   $(".edit_order").each(function(){
         var self = $(this);
-        var j=self.find("td:eq(2)").text().trim();
+        var j=self.find("td:eq(9)").text().trim();
           for(i=0;i<=j;i++){
             self.find("select").append('<option>' + i + '</option>');
             if (i==j){ 
@@ -230,6 +267,28 @@
   });
   
   </script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+  $("#bu").change(function () {
+    var url = $("#inventory").attr("data-groups-url");  // get the url of the `load_cities` view
+    var bu = $(this).val();  // get the selected country ID from the HTML input
+
+    $.ajax({                       // initialize an AJAX request
+      url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+      data: {
+        'bu': bu       // add the country id to the GET parameters
+      },
+      success: function (data) {   // `data` is the return of the `load_cities` view function
+        $("#item_group").html(data);  // replace the contents of the city input with the data that came from the server
+        $("#item_group").append('<option>'+'-----'+'</option>');
+
+       
+      }
+    });
+
+  });
+</script>
     
 {% endblock %}
 

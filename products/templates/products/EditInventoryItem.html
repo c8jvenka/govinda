@@ -39,7 +39,7 @@
 <h3>Inventory Item Details</h3>
   <h3> </h3>
 
-  <form class="form-horizontal" action="{% url 'edit_inventory' %}" method="POST">
+  <form class="form-horizontal"  id="inventory" action="{% url 'edit_inventory' %}" data-groups-url="{% url 'load_groups' %}" method="POST">
     {% csrf_token %}
 
     <div class="form-group">
@@ -63,18 +63,67 @@
   </div>
 </div>
 
+
+<div class="form-group">
+  <label class="control-label col-sm-2" >Business Unit * :</label>
+  <div class="col-xs-6">
+    <select class="form-control" id="bu" name="bu" required="required">
+      <option>-----</option>
+
+      {% for h in bus %}
+      <option >{{ h.name }}</option>
+      {% endfor %}
+
+  </select>
+  </div>
+</div>
+
+<div class="form-group">
+<label class="control-label col-sm-2" >Item Group * :</label>
+<div class="col-xs-6">
+  <select class="form-control"  id="item_group"  name="item_group" required="required" >
+    
+
+</select>
+</div>
+</div>
+
+
+<div class="form-group">
+  <label class="control-label col-sm-2" >Unit :</label>
+  <div class="col-xs-6">
+    <input type="text" class="form-control input-default" value="{{ item.unit }}" id="unit" name="unit"  placeholder="Enter Units  ">
+  </div>
+</div>
+
 <div class="form-group">
 <label class="control-label col-sm-2" >Quantity:</label>
 <div class="col-xs-6">
-  <input type="number" class="form-control input-default" value= "{{ item.quantity }}" id="quantity" name="quantity" required="required" placeholder="Enter Inventory Item Quantity ">
+  <input type="number" class="form-control input-default" value= "{{ item.available_quantity }}" id="quantity" name="quantity" required="required" placeholder="Enter Inventory Item Quantity ">
 </div>
 </div>
 
 <div class="form-group">
 <label class="control-label col-sm-2" >Price:</label>
 <div class="col-xs-6">
-  <input type="number" class="form-control input-default" value= "{{ item.price }}" id="price" name="price" required="required" placeholder="Enter Inventory Item Price ">
+  <input type="number" class="form-control input-default" value= "{{ item.price }}" step="0.01" id="price" name="price" required="required" placeholder="Enter Inventory Item Price ">
 </div>
+</div>
+
+
+<div class="form-group">
+  <label class="control-label col-sm-2" >cGST %:</label>
+  <div class="col-xs-6">
+    <input type="number" class="form-control input-default" value="{{ item.cgst }}" id="cgst" name="cgst" step="0.01" required="required" placeholder="Enter CGST " pattern="[0-9]+">
+  </div>
+</div>
+
+
+<div class="form-group">
+  <label class="control-label col-sm-2" >sGST %:</label>
+  <div class="col-xs-6">
+    <input type="number" class="form-control input-default" value="{{ item.sgst }}" id="sgst" name="sgst" step="0.01" required="required" placeholder="Enter SGST " pattern="[0-9]+">
+  </div>
 </div>
 
 <div class="form-group">
@@ -84,17 +133,8 @@
 </div>
 </div>
 
-<div class="form-group">
-<label class="control-label col-sm-2" >Item Group:</label>
-<div class="col-xs-6">
-  <select class="form-control" name="item_group" required="required">
-    {% for h in ig %}
-    <option {% if h == item.group.name %} selected {% endif %} >{{ h }}</option>
-    {% endfor %}
 
-</select>
-</div>
-</div>
+
 
 
   <div class="form-group">        
@@ -107,6 +147,26 @@
 </form>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#bu").change(function () {
+      var url = $("#inventory").attr("data-groups-url");  // get the url of the `load_cities` view
+      var bu = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'bu': bu       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#item_group").html(data);  // replace the contents of the city input with the data that came from the server
+
+         
+        }
+      });
+
+    });
+  </script>
 {% endblock %}
 
 
